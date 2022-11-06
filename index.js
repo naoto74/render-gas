@@ -31,13 +31,15 @@ function sendGAS(startURL){
 	return new Promise(loaded=>{
 		(function redirectLoop(url){
 			https.get(url, resp => {
-				resp.setEncoding('utf8');
+				resp.setEncoding("utf8");
 				if(resp.statusCode == 302){
 					redirectLoop(resp.headers["location"]);
-				}else{
+				}else if(resp.statusCode === 200){
 					let data = "";
 					resp.on("data", chunk => data += chunk);
 					resp.on("end", () => loaded(data));
+				}else{
+					loaded(`うまく読み込まれませんでした。ステータス:${resp.statusCode}`);
 				}
 			}).on("error", err => {
 				console.log("Error: " + err.message);
