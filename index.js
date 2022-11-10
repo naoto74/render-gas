@@ -43,7 +43,9 @@ function sendGAS(startURL){
 					resp.on("data", chunk => data += chunk);
 					resp.on("end", () => loaded(data));
 				}else{
-					loaded(`うまく読み込まれませんでした。ステータス:${resp.statusCode}`);
+					const status = `うまく読み込まれませんでした。\nステータス:${resp.statusCode}\nURL:${startURL}\nリダイレクト先:${url}\n`;
+					loaded(status.replace(/\n/g, "<br>"));
+					console.log(status);
 				}
 			}).on("error", err => {
 				console.log("Error: " + err.message);
