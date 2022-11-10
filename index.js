@@ -5,11 +5,13 @@ const app = express();
 const GAS = "https://script.google.com/macros/s/{ID}/exec?";
 
 app.set("port", (process.env.PORT || 3000));
+
 app.get("/", async function(request, response){
 	let queryCopy = getQuery(request);
 
     response.setHeader("Content-Type", queryCopy.mime || "text/html;charset=utf-8");
-	let url = GAS.replace("{ID}", queryCopy.id);
+
+	let url = GAS.replace("{ID}", queryCopy.id || process.env.gas_id);
 	delete queryCopy.mime;
 	delete queryCopy.id;
 
@@ -19,6 +21,8 @@ app.get("/", async function(request, response){
 	}
 	response.send(await sendGAS(url));
 });
+
+
 function getQuery(request){
 	let query = {...request.query};
 	let referrer = request.get("Referrer");
